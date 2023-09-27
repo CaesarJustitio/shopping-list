@@ -1,39 +1,60 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+</head>
+<body>
+    {% extends 'base.html' %}
 
-{% block content %}
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Description</th>
-        <th>Date Added</th>
-    </tr>
-
-    {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
-
-    {% for product in products %}
+    {% block content %}
+    <table>
         <tr>
-            <td>{{product.name}}</td>
-            <td>{{product.price}}</td>
-            <td>{{product.description}}</td>
-            <td>{{product.date_added}}</td>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Date Added</th>
         </tr>
-    {% endfor %}
-</table>
 
-<br />
+        {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
 
-<a href="{% url 'main:create_product' %}">
-    <button>
-        Add New Product
-    </button>
-</a>
+        {% for product in products %}
+            <tr>
+                <td>{{product.name}}</td>
+                <td>{{product.price}}</td>
+                <td>{{product.description}}</td>
+                <td>{{product.date_added}}
+                    <a href="{% url 'main:edit_product' product.pk %}">
+                        <button>
+                            Edit
+                        </button>
+                    </a>
+                    <a href="{% url 'main:delete_product' product.pk %}">
+                        <button>
+                            Delete
+                        </button>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 
-<h5>Sesi terakhir login: {{ last_login }}</h5>
+    <br />
 
-<a href="{% url 'main:logout' %}">
-    <button>
-        Logout
-    </button>
-</a>
-{% endblock content %}
+    <a href="{% url 'main:create_product' %}">
+        <button>
+            Add New Product
+        </button>
+    </a>
+
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
+
+    <a href="{% url 'main:logout' %}">
+        <button>
+            Logout
+        </button>
+    </a>
+    {% endblock content %}
+</body>
+</html>
