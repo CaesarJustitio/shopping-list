@@ -1,4 +1,5 @@
-from django.http import HttpResponseNotFound, HttpResponseRedirect
+import json
+from django.http import HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from main.forms import ProductForm, redirect
 from django.urls import reverse
@@ -108,9 +109,8 @@ def edit_product(request, id):
     return render(request, "edit_product.html", context)
 
 def delete_product(request, id):
-    # Get data berdasarkan ID
     product = Product.objects.get(pk = id)
-    # Hapus data
+
     product.delete()
     # Kembali ke halaman awal
     return HttpResponseRedirect(reverse('main:show_main'))
@@ -121,7 +121,7 @@ def get_product_json(request):
 
 @csrf_exempt
 def add_product_ajax(request):
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         name = request.POST.get("name")
         price = request.POST.get("price")
         description = request.POST.get("description")
@@ -133,3 +133,22 @@ def add_product_ajax(request):
         return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
+
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_product = Product.objects.create(
+            user = request.user,
+            name = data["name"],
+            price = int(data["price"]),
+            description = data["description"]
+        )
+
+        new_product.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)

@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id'),
     path('json/<int:id>/', show_json_by_id, name='show_json_by_id'),
-    path('', include('main.urls'))
+    path('', include('main.urls')),
+    path('auth/', include('authentication.urls')),
 ]
